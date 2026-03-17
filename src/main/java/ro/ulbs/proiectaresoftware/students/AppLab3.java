@@ -12,6 +12,7 @@ public class AppLab3
 {public static void main(String[] args) {
     Path path = Paths.get("studenti_in.txt");
     Path pathOut = Paths.get("studenti_out.txt");
+    Path pathOutSorted = Paths.get("studenti_out_sorted.txt");
     try {
 
         List<String> ss = Files.readAllLines(path);
@@ -36,13 +37,28 @@ public class AppLab3
             }
         }
 
-        listaStudenti.sort(Comparator.comparing(Student::getNume));
-
-        List<String> rezultat = new ArrayList<>();
+        //listaStudenti.sort(Comparator.comparing(Student::getNume));
+        /*List<String> liniiSortate = new ArrayList<>();
         for (Student s : listaStudenti) {
-            rezultat.add(s.toString());
+            // Folosim datele obiectului pentru a reconstrui linia (sau s.toString())
+            liniiSortate.add(s.getNumarMatricol() + "," + s.getPrenume() + "," + s.getNume() + "," + s.getFormatieDeStudiu());
         }
         Files.write(pathOut, rezultat);
+        */
+
+        //Tema
+        listaStudenti.sort(Comparator
+                .comparing(Student::getFormatieDeStudiu)
+                .thenComparing(Student::getNume));
+
+
+        List<String> liniiSortate = new ArrayList<>();
+        for (Student s : listaStudenti) {
+            // Folosim datele obiectului pentru a reconstrui linia (sau s.toString())
+            liniiSortate.add(s.getNumarMatricol() + "," + s.getPrenume() + "," + s.getNume() + "," + s.getFormatieDeStudiu());
+        }
+
+        Files.write(pathOutSorted, liniiSortate);
     } catch (IOException e) {
         e.printStackTrace();
     }
