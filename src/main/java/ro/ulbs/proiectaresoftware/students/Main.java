@@ -18,6 +18,20 @@ public class Main {
         return false;
     }
 
+
+    //TEMA LAB4
+    public static float gasesteNota(String prenume, String nume, Map<String, Student> tineri) {
+
+        Student s = tineri.get(nume);
+
+        if (s != null && s.getPrenume().equals(prenume)) {
+            return s.getNota();
+        }
+
+        return 0.0f;
+    }
+
+
     public static void main() {
 
 //        Set<Student> studenti = new HashSet<>();
@@ -68,6 +82,14 @@ public class Main {
             Float nota = note.getOrDefault(st.getNumarMatricol(), 0f);
             st.setNota(nota);
         }
+        float notaM = gasesteNota("Bianca", "Popescu", studMap);
+        float notaN = gasesteNota("Ioan", "Popa", studMap);
+
+        System.out.println("Nota pentru Bianca Popescu: " + notaM);
+        System.out.println("Nota pentru Ioan Popa: " + notaN);
+
+
+
         writeFile(students);
     }
 

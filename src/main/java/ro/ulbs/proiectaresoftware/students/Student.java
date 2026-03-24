@@ -52,6 +52,10 @@ public class Student {
         this.nota = nota;
     }
 
+    public float getNota() {
+        return nota;
+    }
+
     @Override
     public String toString() {
         return String.format("%15d %20s %15s %2f",
