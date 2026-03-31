@@ -1,0 +1,4 @@
+           1025          Andrei Popa        ISM141/2 8.700000     725.50
+           1024        Ioan Mihalcea        ISM141/1 9.800000     801.10
+           1026      Anamaria Prodan         TI131/1 8.900000     745.50
+           1029       Bianca Popescu         TI131/1 9.100000     780.80
