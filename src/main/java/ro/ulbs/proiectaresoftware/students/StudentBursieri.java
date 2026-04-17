@@ -11,6 +11,10 @@ public class StudentBursieri extends Student{
         this.cuantumBursa = cuantumBursa;
     }
 
+    public double getCuantumBursa() {
+        return cuantumBursa;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
