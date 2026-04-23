@@ -6,8 +6,8 @@ public class StudentBursieri extends Student{
     private Double cuantumBursa;
 
     public StudentBursieri(int numarMatricol, String prenume, String nume, String formatieDeStudiu,Double nota, Double cuantumBursa) {
-        super(numarMatricol, prenume, nume, formatieDeStudiu);
-        setNota(nota.floatValue());
+        super(numarMatricol, prenume, nume, formatieDeStudiu,nota.floatValue());
+        //setNota(nota.floatValue());
         this.cuantumBursa = cuantumBursa;
     }
 

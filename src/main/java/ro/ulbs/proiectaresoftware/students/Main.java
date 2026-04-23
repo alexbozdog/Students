@@ -30,7 +30,24 @@ public class Main {
 
         return 0.0f;
     }
+    // 7.6.3 - muta un student in alta formatie, returneaza obiect NOU (imutabilitate)
+    static Student schimbaFormatia(Student st, String nouaFormatieDeStudiu) {
+        return new Student(st.getNumarMatricol(), st.getPrenume(),
+                st.getNume(), nouaFormatieDeStudiu, st.getNota());
+    }
 
+    // 7.6.3 - imparte studentii in doua formatii de studiu cu dimensiune egala
+    static Set<Student> imparteInDouaFormatii(Set<Student> studenti, String formatia1, String formatia2) {
+        Set<Student> rezultat = new HashSet<>();
+        List<Student> lista = new ArrayList<>(studenti);
+        int jumatate = (lista.size() + 1) / 2; // prima formatie are 1 student in plus daca e numar impar
+
+        for (int i = 0; i < lista.size(); i++) {
+            String formatie = (i < jumatate) ? formatia1 : formatia2;
+            rezultat.add(schimbaFormatia(lista.get(i), formatie));
+        }
+        return rezultat;
+    }
 
     public static void main() {
 
@@ -68,20 +85,18 @@ public class Main {
 */
         List<Student> students = readFromFile();
         Map<Integer, Float> note = citesteNote();
-        Map<String, Student> studMap = new HashMap<>();
+        List<Student> studentiCuNote = new ArrayList<>();
         for (Student s : students) {
+            Float nota = note.getOrDefault(s.getNumarMatricol(), 0f);
+            studentiCuNote.add(new Student(s.getNumarMatricol(), s.getPrenume(),
+                    s.getNume(), s.getFormatieDeStudiu(), nota));
+        }
+
+        Map<String, Student> studMap = new HashMap<>();
+        for (Student s : studentiCuNote) {
             studMap.put(s.getNume(), s);
         }
 
-        for (String nume : studMap.keySet()) {
-            Student st = studMap.get(nume);
-//            Float nota = 0f;
-//            if (note.containsKey(st.getNumarMatricol())){
-//                nota = note.get(st.getNumarMatricol());
-//            }
-            Float nota = note.getOrDefault(st.getNumarMatricol(), 0f);
-            st.setNota(nota);
-        }
         float notaM = gasesteNota("Bianca", "Popescu", studMap);
         float notaN = gasesteNota("Ioan", "Popa", studMap);
 
@@ -90,7 +105,15 @@ public class Main {
 
 
 
-        writeFile(students);
+        writeFile(studentiCuNote);
+
+        Set<Student> studenti = new HashSet<>(studentiCuNote);
+        studenti = imparteInDouaFormatii(studenti, "TI 211_1", "TI 211_2");
+
+        System.out.println("\nStudenti dupa impartire in formatii:");
+        for (Student s : studenti) {
+            System.out.println(s);
+        }
     }
 
     static List<Student> readFromFile() {
@@ -109,7 +132,7 @@ public class Main {
                     String nume = bucati[2].trim();
                     String grupa = bucati[3].trim();
 
-                    Student s = new Student(nrMatricol, prenume, nume, grupa);
+                    Student s = new Student(nrMatricol, prenume, nume, grupa,0f);
                     listaStudenti.add(s);
                 }
             }

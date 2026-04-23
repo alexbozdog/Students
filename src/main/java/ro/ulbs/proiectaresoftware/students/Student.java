@@ -3,58 +3,35 @@ import java.util.Objects;
 
 public class Student {
 
-    private int numarMatricol;
-    private String prenume;
-    private String nume;
-    private String formatieDeStudiu;
-    private float nota;
+    private final int numarMatricol;
+    private final String prenume;
+    private final String nume;
+    private final String formatieDeStudiu;
+    private final float nota;
 
-    public Student(int numarMatricol,String prenume,String nume,String formatieDeStudiu) {
+    public Student(int numarMatricol,String prenume,String nume,String formatieDeStudiu,float nota) {
         this.numarMatricol = numarMatricol;
         this.prenume=prenume;
         this.nume=nume;
         this.formatieDeStudiu=formatieDeStudiu;
+        this.nota=nota;
+
     }
 
     public int getNumarMatricol() {
         return numarMatricol;
     }
-
-    public void setNumarMatricol(int numarMatricol) {
-        this.numarMatricol = numarMatricol;
-    }
-
     public String getPrenume() {
         return prenume;
     }
-
-    public void setPrenume(String prenume) {
-        this.prenume = prenume;
-    }
-
     public String getNume() {
         return nume;
     }
-
-    public void setNume(String nume) {
-        this.nume = nume;
-    }
-
     public String getFormatieDeStudiu() {
         return formatieDeStudiu;
     }
 
-    public void setFormatieDeStudiu(String formatieDeStudiu) {
-        this.formatieDeStudiu = formatieDeStudiu;
-    }
-
-    public void setNota(float nota) {
-        this.nota = nota;
-    }
-
-    public float getNota() {
-        return nota;
-    }
+    public float getNota() { return nota;}
 
     @Override
     public String toString() {
