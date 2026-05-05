@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Main {
     public static boolean existaStudent(List<Student> lista, Student s) {
@@ -30,6 +31,7 @@ public class Main {
 
         return 0.0f;
     }
+
     // 7.6.3 - muta un student in alta formatie, returneaza obiect NOU (imutabilitate)
     static Student schimbaFormatia(Student st, String nouaFormatieDeStudiu) {
         return new Student(st.getNumarMatricol(), st.getPrenume(),
@@ -49,7 +51,8 @@ public class Main {
         return rezultat;
     }
 
-    public static void main() {
+    public static void main(String[] args) {
+        {
 
 //        Set<Student> studenti = new HashSet<>();
 //        studenti.add(new Student(112, "Ioan", "Popa", "TI21/1"));
@@ -83,36 +86,76 @@ public class Main {
         System.out.println(studenti.contains(
                 new Student(112, "Maria", "Popa", "TI21/1")));
 */
-        List<Student> students = readFromFile();
-        Map<Integer, Float> note = citesteNote();
-        List<Student> studentiCuNote = new ArrayList<>();
-        for (Student s : students) {
-            Float nota = note.getOrDefault(s.getNumarMatricol(), 0f);
-            studentiCuNote.add(new Student(s.getNumarMatricol(), s.getPrenume(),
-                    s.getNume(), s.getFormatieDeStudiu(), nota));
-        }
 
-        Map<String, Student> studMap = new HashMap<>();
-        for (Student s : studentiCuNote) {
-            studMap.put(s.getNume(), s);
-        }
+            //lab9
+            List<Student> studenti = Arrays.asList(
+                    new Student(1025, "Andrei", "Popa", "ISM141/2", 8.70f),
+                    new Student(1024, "Ioan", "Mihalcea", "ISM141/1", 10),
+                    new Student(1026, "Anamaria", "Prodan", "TI131/1", 8.90f),
+                    new Student(1029, "Bianca", "Popescu", "TI131/1", 10),
+                    new Student(1029, "Maria", "Pana", "TI131/2", 4.10f),
+                    new Student(1029, "Gabriela", "Mohanu", "TI131/2", 7.33f),
+                    new Student(1029, "Marius", "Nasta", "TI131/2", 3.20f),
+                    new Student(1029, "Marius", "Nasta", "TI131/1", 5.12f),
+                    new Student(1029, "Andrei", "Dobrescu", "TI131/2", 2.22f)
+            );
 
-        float notaM = gasesteNota("Bianca", "Popescu", studMap);
-        float notaN = gasesteNota("Ioan", "Popa", studMap);
+            // a)
+            System.out.println("a) Studenti cu nota 10:");
+            studenti.stream().filter(s -> s.getNota() == 10).forEach(System.out::println);
 
-        System.out.println("Nota pentru Bianca Popescu: " + notaM);
-        System.out.println("Nota pentru Ioan Popa: " + notaN);
+            // b)
+            System.out.println("\nb) Studenti cu nota sub 5:");
+            studenti.stream().filter(s -> s.getNota() < 5).forEach(System.out::println);
+
+            // c)
+            List<Student> noteModificate = studenti.stream()
+                    .map(s -> {
+                        if (s.getNota() < 4) s.setNota(4.0f);
+                        return s;
+                    }).collect(Collectors.toList());
+            System.out.println("\n c) Liste cu note sub 4 rotunjite la 4: " + noteModificate);
+
+            // d)
+            double sumaNote = studenti.stream()
+                    .mapToDouble(Student::getNota)
+                    .sum();
+            System.out.println("\nd) Suma notelor: " + sumaNote);
+
+            // e)
+            double media = sumaNote / studenti.size();
+            System.out.println("e) Media notelor: " + media);
 
 
+            List<Student> students = readFromFile();
+            Map<Integer, Float> note = citesteNote();
+            List<Student> studentiCuNote = new ArrayList<>();
+            for (Student s : students) {
+                Float nota = note.getOrDefault(s.getNumarMatricol(), 0f);
+                studentiCuNote.add(new Student(s.getNumarMatricol(), s.getPrenume(),
+                        s.getNume(), s.getFormatieDeStudiu(), nota));
+            }
 
-        writeFile(studentiCuNote);
+            Map<String, Student> studMap = new HashMap<>();
+            for (Student s : studentiCuNote) {
+                studMap.put(s.getNume(), s);
+            }
 
+            float notaM = gasesteNota("Bianca", "Popescu", studMap);
+            float notaN = gasesteNota("Ioan", "Popa", studMap);
+
+            System.out.println("Nota pentru Bianca Popescu: " + notaM);
+            System.out.println("Nota pentru Ioan Popa: " + notaN);
+
+
+            writeFile(studentiCuNote);
+/*
         Set<Student> studenti = new HashSet<>(studentiCuNote);
         studenti = imparteInDouaFormatii(studenti, "TI 211_1", "TI 211_2");
 
         System.out.println("\nStudenti dupa impartire in formatii:");
         for (Student s : studenti) {
-            System.out.println(s);
+            System.out.println(s);*/
         }
     }
 
@@ -132,7 +175,7 @@ public class Main {
                     String nume = bucati[2].trim();
                     String grupa = bucati[3].trim();
 
-                    Student s = new Student(nrMatricol, prenume, nume, grupa,0f);
+                    Student s = new Student(nrMatricol, prenume, nume, grupa, 0f);
                     listaStudenti.add(s);
                 }
             }
@@ -198,7 +241,9 @@ public class Main {
             e.printStackTrace();
         }
         return note;
-    }
 
+    }
 }
+
+
 
