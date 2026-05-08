@@ -1,5 +1,12 @@
 package ro.ulbs.proiectaresoftware.students;
 
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -18,7 +25,6 @@ public class Main {
         }
         return false;
     }
-
 
     //TEMA LAB4
     public static float gasesteNota(String prenume, String nume, Map<String, Student> tineri) {
@@ -49,6 +55,63 @@ public class Main {
             rezultat.add(schimbaFormatia(lista.get(i), formatie));
         }
         return rezultat;
+    }
+
+    //8.5.4 a
+    public static void writeToXls(Collection<Student> studenti, String fileName) {
+        try (Workbook workbook = new XSSFWorkbook();
+             FileOutputStream fileOut = new FileOutputStream(fileName)) {
+
+            Sheet sheet = workbook.createSheet("Lista Studenti");
+            int rowNum = 0;
+
+            Row headerRow = sheet.createRow(rowNum++);
+            headerRow.createCell(0).setCellValue("Nr. Matricol");
+            headerRow.createCell(1).setCellValue("Prenume");
+            headerRow.createCell(2).setCellValue("Nume");
+            headerRow.createCell(3).setCellValue("Grupă");
+            headerRow.createCell(4).setCellValue("Notă");
+
+            for (Student st : studenti) {
+                Row row = sheet.createRow(rowNum++);
+                row.createCell(0).setCellValue(st.getNumarMatricol());
+                row.createCell(1).setCellValue(st.getPrenume());
+                row.createCell(2).setCellValue(st.getNume());
+                row.createCell(3).setCellValue(st.getFormatieDeStudiu());
+                row.createCell(4).setCellValue(st.getNota());
+            }
+
+            workbook.write(fileOut);
+            System.out.println("Fișierul Excel a fost generat: " + fileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //8.5.4 b
+    public static List<Student> readFromXls(String fileName) {
+        List<Student> listaCitita = new ArrayList<>();
+        try (FileInputStream fis = new FileInputStream(fileName);
+             Workbook workbook = new XSSFWorkbook(fis)) {
+
+            Sheet sheet = workbook.getSheetAt(0);
+
+            for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+                Row row = sheet.getRow(i);
+                if (row == null) continue;
+
+                int nrMatricol = (int) row.getCell(0).getNumericCellValue();
+                String prenume = row.getCell(1).getStringCellValue();
+                String nume = row.getCell(2).getStringCellValue();
+                String grupa = row.getCell(3).getStringCellValue();
+                float nota = (float) row.getCell(4).getNumericCellValue();
+
+                listaCitita.add(new Student(nrMatricol, prenume, nume, grupa, nota));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return listaCitita;
     }
 
     public static void main(String[] args) {
@@ -149,6 +212,18 @@ public class Main {
 
 
             writeFile(studentiCuNote);
+
+            // 8.5.4 a) Exportăm lista 'studentiCuNote' în Excel
+            String xlsFileName = "laborator8_students.xlsx";
+            writeToXls(studentiCuNote, xlsFileName);
+
+            // 8.5.4 b) Citim înapoi studenții din fișierul Excel nou creat
+            List<Student> studentsFromXls = readFromXls(xlsFileName);
+
+            System.out.println("\n--- Studenți citiți din xlsx (8.5.4 b): ---");
+            for (Student st : studentsFromXls) {
+                System.out.println(st);
+            }
 /*
         Set<Student> studenti = new HashSet<>(studentiCuNote);
         studenti = imparteInDouaFormatii(studenti, "TI 211_1", "TI 211_2");
@@ -241,8 +316,8 @@ public class Main {
             e.printStackTrace();
         }
         return note;
-
     }
+
 }
 
 
