@@ -23,10 +23,8 @@ public class AplicatieCuBursaTest {
             StudentBursieri urmator = lista.get(i+1);
 
 
-            if(curent.getNume().equals(urmator.getNume()) && curent.getNota() == urmator.getNota()) {
-                assertTrue(curent.getCuantumBursa() <= urmator.getCuantumBursa(),
-                        "Sortarea după cuantum bursă a eșuat pentru valori egale de nume/notă");
+            assertTrue(curent.compareTo(urmator) <= 0,
+                    "Sortarea a esuat intre elementele de la indexul " + i + " si " + (i+1));
             }
         }
     }
-}
