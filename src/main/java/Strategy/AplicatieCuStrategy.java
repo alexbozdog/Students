@@ -23,16 +23,25 @@ public class AplicatieCuStrategy {
         Exporter exporter = new Exporter();
         SettingsHolder settings = SettingsHolder.getInstance();
 
-        // a)
-        exporter.startExport(new StudentiInConsola(), studenti);
+        // a) Export in consola + Măsurare timp
+        System.out.println("--- Export Consola ---");
+        IStudentiExport exportConsola = new StudentiInConsola();
+        IStudentiExport exportConsolaDecorat = new ExportTimeDecorator(exportConsola);
+        exporter.startExport(exportConsolaDecorat, studenti);
 
-        // b)
+        // b) Export fisier Text + Măsurare timp
+        System.out.println("\n--- Export Fisier Text ---");
         String txtFile = settings.getSetting("txtExportPath");
-        exporter.startExport(new StudentiInFisierText(txtFile), studenti);
+        IStudentiExport exportText = new StudentiInFisierText(txtFile);
+        IStudentiExport exportTextDecorat = new ExportTimeDecorator(exportText);
+        exporter.startExport(exportTextDecorat, studenti);
 
-        // c)
+        // c) Export fisier XLSX + Măsurare timp
+        System.out.println("\n--- Export Fisier XLSX ---");
         String xlsxFile = settings.getSetting("xlsxExportPath");
-        exporter.startExport(new StudentiInFisierXlsx(xlsxFile), studenti);
+        IStudentiExport exportXlsx = new StudentiInFisierXlsx(xlsxFile);
+        IStudentiExport exportXlsxDecorat = new ExportTimeDecorator(exportXlsx);
+        exporter.startExport(exportXlsxDecorat, studenti);
 
         System.out.println("\n --Toate strategiile de export au fost rulate.-- ");
     }
